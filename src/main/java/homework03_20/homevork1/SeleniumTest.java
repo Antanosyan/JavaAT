@@ -1,4 +1,4 @@
-package homework1_03_20;
+package homework03_20.homevork1;
 
 
 import org.openqa.selenium.By;
