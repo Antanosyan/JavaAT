@@ -1,4 +1,6 @@
-import enums.ProductCategories;
+package homework1;
+
+import homework1.enums.ProductCategories;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;

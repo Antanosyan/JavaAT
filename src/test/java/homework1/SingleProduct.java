@@ -1,3 +1,5 @@
+package homework1;
+
 public class SingleProduct {
 
     public SingleProduct(String name, String price) {

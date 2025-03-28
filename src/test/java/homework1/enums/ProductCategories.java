@@ -1,4 +1,4 @@
-package enums;
+package homework1.enums;
 
 public enum ProductCategories {
     SHOES("Shoes"),
