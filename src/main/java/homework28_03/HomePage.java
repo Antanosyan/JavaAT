@@ -1,9 +1,6 @@
 package homework28_03;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 
 public class HomePage {
@@ -29,12 +26,33 @@ public class HomePage {
         driver.findElement(categorySearchField).click();
         Thread.sleep(2000);
 
+        String firstHighlightedText = null;
+        boolean hasLoopedAround = false;
+
         while (true) {
-            WebElement highlightedOption = driver.findElement(By.xpath("//div[contains(@class, 'ant-select-item-option-active')]"));
-            if (highlightedOption.getText().equals(industry)) {
+            WebElement highlightedOption = driver.findElement(
+                    By.xpath("//div[contains(@class, 'ant-select-item-option-active')]"));
+            String currentText = highlightedOption.getText();
+
+            // Check if we've found our industry
+            if (currentText.equals(industry)) {
                 highlightedOption.click();
-                break;
+                return;
             }
+
+            // Track the first option we see to detect cycling
+            if (firstHighlightedText == null) {
+                firstHighlightedText = currentText;
+            } else if (currentText.equals(firstHighlightedText)) {
+                // We've cycled back to the first option without finding our industry
+                hasLoopedAround = true;
+            }
+
+            // If we've looped around without finding the option, throw exception
+            if (hasLoopedAround) {
+                throw new NoSuchElementException("Industry '" + industry + "' not found in dropdown options");
+            }
+
             act.sendKeys(Keys.DOWN).perform();
             Thread.sleep(500);
         }
