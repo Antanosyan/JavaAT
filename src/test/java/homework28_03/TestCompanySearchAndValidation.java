@@ -34,7 +34,6 @@ public class TestCompanySearchAndValidation {
 
         homePage.selectCompaniesRadioButton();
         homePage.selectIndustry("Information technologies");
-        homePage.enterSearch();
         homePage.clickSearchButton();
 
         searchResultsPage.enterSearchKeyword(Helper.generateRandomString(8));

@@ -1,7 +1,10 @@
 package homework28_03;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class HomePage {
 
@@ -10,6 +13,7 @@ public class HomePage {
     private final By infTechnologies = By.xpath("//div[text()=\"Information technologies\"]");
     private final By categorySearchField = By.xpath("//input[@class='ant-select-selection-search-input']");
     private final By searchButton = By.xpath("//img[@alt=\"search-icon\"]");
+
     public HomePage(WebDriver driver) {
         this.driver = driver;
     }
@@ -21,13 +25,19 @@ public class HomePage {
     }
 
     public void selectIndustry(String industry) throws InterruptedException {
-        driver.findElement(categorySearchField).sendKeys(industry);
-        Thread.sleep(3000);
-    }
+        Actions act = new Actions(driver);
+        driver.findElement(categorySearchField).click();
+        Thread.sleep(2000);
 
-    public void enterSearch() throws InterruptedException {
-        driver.findElement(infTechnologies).click();
-        Thread.sleep(3000);
+        while (true) {
+            WebElement highlightedOption = driver.findElement(By.xpath("//div[contains(@class, 'ant-select-item-option-active')]"));
+            if (highlightedOption.getText().equals(industry)) {
+                highlightedOption.click();
+                break;
+            }
+            act.sendKeys(Keys.DOWN).perform();
+            Thread.sleep(500);
+        }
     }
 
     public void clickSearchButton() throws InterruptedException {
