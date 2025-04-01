@@ -10,10 +10,9 @@ public class TestCompanySearchAndValidation extends BaseTest {
     @Test
     public void testCompanySearchAndValidation() throws Exception {
         HomePage homePage = new HomePage();
-        SearchResultsPage searchResultsPage = new SearchResultsPage();
-        SingleCompanyResult singleCompanyResult = new SingleCompanyResult();
+        SearchResultsPage searchResultsPage;
 
-        homePage.selectCompaniesRadioButton("Companies")
+        searchResultsPage = homePage.selectCompaniesRadioButton("Companies")
                 .selectIndustry("Information technologies")
                 .clickSearchButton();
 
