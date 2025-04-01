@@ -2,7 +2,7 @@ package homework28_03;
 
 import org.openqa.selenium.*;
 
-public class HomePage extends BasePage{
+public class HomePage extends BasePage {
 
     private final By infTechnologies = By.xpath("//div[text()='Information technologies']");
     private final By categorySearchField = By.xpath("//input[@class='ant-select-selection-search-input']");
@@ -27,6 +27,7 @@ public class HomePage extends BasePage{
         Thread.sleep(3000);
         return new SearchResultsPage();
     }
+
     public String getExpectedIndustryName() throws InterruptedException {
         Thread.sleep(3000);
         return driver.findElement(infTechnologies).getText().toLowerCase();

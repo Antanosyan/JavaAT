@@ -9,11 +9,12 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class SearchResultsPage extends BasePage {
-    List<WebElement> list;
 
-    private final By searchInput = By.xpath("//input[@placeholder=\"Enter keywords...\"]");
-    private final By submitSearchButton = By.xpath("//div[text()=\"Search\"]");
-    private final By resultItems = By.xpath("//div[img[@alt=\"company-logo\"]]/div/div/div/div[string-length(text()) > 0]");
+    private final By searchInput = By.xpath("//input[@placeholder='Enter keywords...']");
+    private final By submitSearchButton = By.xpath("//div[text()='Search']");
+    private final By resultItems = By.xpath("//div[img[@alt='company-logo']]/div/div/div/div[string-length(text()) > 0]");
+    private final By viewMoreLocator = By.xpath("(//div[@tabindex]/div[text()= 'View more'])[1]");
+    private final By hiringLocator = By.xpath("//div[text()='Hiring']");
     public static int randomCompanyIndex;
     public static List<WebElement> companies;
 
@@ -64,5 +65,36 @@ public class SearchResultsPage extends BasePage {
         return driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]/ancestor-or-self::div[4]", nameCompany)))
                 .getText().toLowerCase();
 
+    }
+
+    public SearchResultsPage openViewMoreSection() throws InterruptedException {
+        Thread.sleep(3000);
+        Actions actions = new Actions(driver);
+        actions.click(driver.findElement(viewMoreLocator)).perform();
+
+        return this;
+    }
+
+    public SearchResultsPage selectIndustryFilter(String industryName) throws InterruptedException {
+        Actions actions = new Actions(driver);
+        Thread.sleep(5000);
+        actions.click(driver.findElement(By.xpath(String.format("//span[text()='%s']", industryName)))).perform();
+        Thread.sleep(5000);
+        return this;
+    }
+
+    public SearchResultsPage enterHiring() {
+        driver.findElement(hiringLocator).click();
+        return this;
+    }
+
+    public List<Company> getCompamyList() throws InterruptedException {
+        List<Company> productList = new ArrayList<>();
+        List<String> companies = getResultList();
+        Thread.sleep(5000);
+        for (String company : companies) {
+            productList.add(new Company(company));
+        }
+        return productList;
     }
 }
