@@ -1,68 +1,34 @@
 package homework28_03;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 
-public class HomePage {
+public class HomePage extends BasePage{
 
-    private final WebDriver driver;
-    private final By companiesRadioButton = By.xpath("(//div[text()=\"Companies\"])[2]");;
-    private final By infTechnologies = By.xpath("//div[text()=\"Information technologies\"]");
+    private final By infTechnologies = By.xpath("//div[text()='Information technologies']");
     private final By categorySearchField = By.xpath("//input[@class='ant-select-selection-search-input']");
     private final By searchButton = By.xpath("//img[@alt=\"search-icon\"]");
 
-    public HomePage(WebDriver driver) {
-        this.driver = driver;
-    }
-
-    public void selectCompaniesRadioButton() throws InterruptedException {
+    public HomePage selectCompaniesRadioButton(String radioButton) throws InterruptedException {
         Thread.sleep(3000);
-        driver.findElement(companiesRadioButton).click();
+        driver.findElement(By.xpath(String.format("(//div[text()='%s'])[2]", radioButton))).click();
         Thread.sleep(3000);
+        return this;
     }
 
-    public void selectIndustry(String industry) throws InterruptedException {
-        Actions act = new Actions(driver);
-        driver.findElement(categorySearchField).click();
-        Thread.sleep(2000);
-
-        String firstHighlightedText = null;
-        boolean hasLoopedAround = false;
-
-        while (true) {
-            WebElement highlightedOption = driver.findElement(
-                    By.xpath("//div[contains(@class, 'ant-select-item-option-active')]"));
-            String currentText = highlightedOption.getText();
-
-            // Check if we've found our industry
-            if (currentText.equals(industry)) {
-                highlightedOption.click();
-                return;
-            }
-
-            // Track the first option we see to detect cycling
-            if (firstHighlightedText == null) {
-                firstHighlightedText = currentText;
-            } else if (currentText.equals(firstHighlightedText)) {
-                // We've cycled back to the first option without finding our industry
-                hasLoopedAround = true;
-            }
-
-            // If we've looped around without finding the option, throw exception
-            if (hasLoopedAround) {
-                throw new NoSuchElementException("Industry '" + industry + "' not found in dropdown options");
-            }
-
-            act.sendKeys(Keys.DOWN).perform();
-            Thread.sleep(500);
-        }
+    public HomePage selectIndustry(String industry) throws InterruptedException {
+        driver.findElement(categorySearchField).sendKeys(industry);
+        Thread.sleep(3000);
+        driver.findElement(By.xpath(String.format("//div[text()='%s']", industry))).click();
+        return this;
     }
 
-    public void clickSearchButton() throws InterruptedException {
+    public SearchResultsPage clickSearchButton() throws InterruptedException {
         driver.findElement(searchButton).click();
         Thread.sleep(3000);
+        return new SearchResultsPage();
     }
-    public String getExpectedIndustryName(){
+    public String getExpectedIndustryName() throws InterruptedException {
+        Thread.sleep(3000);
         return driver.findElement(infTechnologies).getText().toLowerCase();
     }
 }

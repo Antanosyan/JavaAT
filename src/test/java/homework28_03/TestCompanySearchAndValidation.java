@@ -1,60 +1,46 @@
 package homework28_03;
 
-import org.junit.jupiter.api.AfterEach;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 
-public class TestCompanySearchAndValidation {
-    private WebDriver driver;
-
-    @BeforeEach
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.get("https://staff.am");
-        driver.manage().window().maximize();
-    }
-
-    @AfterEach
-    public void tearDown() throws InterruptedException {
-        if (driver != null) {
-            Thread.sleep(3000);
-            driver.quit();
-        }
-    }
+public class TestCompanySearchAndValidation extends BaseTest {
 
     @Test
     public void testCompanySearchAndValidation() throws Exception {
-        HomePage homePage = new HomePage(driver);
-        SearchResultsPage searchResultsPage = new SearchResultsPage(driver);
-        SingleCompanyResult singleCompanyResult = new SingleCompanyResult(driver);
+        HomePage homePage = new HomePage();
+        SearchResultsPage searchResultsPage = new SearchResultsPage();
+        SingleCompanyResult singleCompanyResult = new SingleCompanyResult();
 
-        homePage.selectCompaniesRadioButton();
-        homePage.selectIndustry("Information technologies");
-        homePage.clickSearchButton();
+        homePage.selectCompaniesRadioButton("Companies")
+                .selectIndustry("Information technologies")
+                .clickSearchButton();
 
-        searchResultsPage.enterSearchKeyword(Helper.generateRandomString(8));
-        searchResultsPage.clickOnSearchButton();
-        Assertions.assertTrue(searchResultsPage.getResultList().isEmpty(), "no such item");
+        searchResultsPage.enterSearchKeyword(RandomStringUtils.randomAlphanumeric(8))
+                .clickOnSearchButton();
+        Assertions.assertTrue(searchResultsPage.getResultList().isEmpty(),
+                "Result must be empty");
 
-        searchResultsPage.clearSearchField();
-        searchResultsPage.enterSearchKeyword("ser");
-        searchResultsPage.clickOnSearchButton();
+        searchResultsPage.clearSearchField()
+                .enterSearchKeyword("ser")
+                .clickOnSearchButton();
 
-        boolean isContainKeyword = Helper.areAllNamesContainingSearch(searchResultsPage.getResultList(), "sEr");
-        Assertions.assertTrue(isContainKeyword, "all products name must contain keyword");
+        Assertions.assertTrue(searchResultsPage.getResultList()
+                        .stream()
+                        .allMatch(name -> name.contains("ser")),
+                "all products name must contain search keyword");
 
-        String expectedDetails = searchResultsPage.expectedCompanyValid("ServiceTitan");
-        searchResultsPage.selectRandomItem("ServiceTitan");
-        String actualDetails = singleCompanyResult.getActualResult();
-        Assertions.assertEquals(expectedDetails, actualDetails);
+        String expectedDetails = searchResultsPage.selectRandomItem();
+        SingleCompanyResult companyPage = searchResultsPage.clickRandomPage();
+        String actualDetails = companyPage.getActualResult();
+        Assertions.assertEquals(expectedDetails, actualDetails,
+                "Company details in IndustriesResultPage should be equals company details in CompanyPage");
 
-        String expectedIndustryName = homePage.getExpectedIndustryName();
-        String actualIndustryName = singleCompanyResult.getActualNameOfIndustry();
-        Assertions.assertEquals(expectedIndustryName, actualIndustryName);
+        String expectedIndustry = homePage.getExpectedIndustryName();
+        String actualIndustry = companyPage.getActualNameOfIndustry();
+        Assertions.assertEquals(expectedIndustry, actualIndustry,
+                "Industry name of company should be the same as selected industries category");
 
     }
 }
