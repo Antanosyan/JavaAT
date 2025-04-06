@@ -18,8 +18,8 @@ public class TestCompanySearchAndValidation extends BaseTest {
 
         searchResultsPage.enterSearchKeyword(RandomStringUtils.randomAlphanumeric(8))
                 .clickOnSearchButton();
-        Assertions.assertTrue(searchResultsPage.getResultList().isEmpty(),
-                "Result must be empty");
+        boolean noResults = searchResultsPage.isNoCompanyFoundMessageVisible();
+        Assertions.assertTrue(noResults, "Expected no companies to be found!");
 
         searchResultsPage.clearSearchField()
                 .enterSearchKeyword("ser")

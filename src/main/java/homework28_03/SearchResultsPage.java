@@ -2,8 +2,7 @@ package homework28_03;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-
-import java.util.ArrayList;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -13,51 +12,44 @@ public class SearchResultsPage extends BasePage {
     private final By searchInput = By.xpath("//input[@placeholder='Enter keywords...']");
     private final By submitSearchButton = By.xpath("//div[text()='Search']");
     private final By resultItems = By.xpath("//div[img[@alt='company-logo']]/div/div/div/div[string-length(text()) > 0]");
-    private final By viewMoreLocator = By.xpath("(//div[@tabindex]/div[text()= 'View more'])[1]");
+    private final By viewMoreLocator = By.xpath("//div[text()='Filter By Industry']//following-sibling::div[6]");
     private final By hiringLocator = By.xpath("//div[text()='Hiring']");
     public static int randomCompanyIndex;
     public static List<WebElement> companies;
 
-    public SearchResultsPage enterSearchKeyword(String searchString) throws InterruptedException {
-        Thread.sleep(3000);
-        driver.findElement(searchInput).sendKeys(searchString);
+    public SearchResultsPage enterSearchKeyword(String searchString) {
+        wait.until(ExpectedConditions.elementToBeClickable(searchInput))
+                .sendKeys(searchString);
         return this;
     }
 
-    public void clickOnSearchButton() throws InterruptedException {
-        Thread.sleep(3000);
+    public void clickOnSearchButton() {
         driver.findElement(submitSearchButton).click();
     }
 
-    public SearchResultsPage clearSearchField() throws InterruptedException {
-        Thread.sleep(3000);
+    public SearchResultsPage clearSearchField() {
         driver.findElement(searchInput).clear();
         return this;
     }
 
-    public List<String> getResultList() throws InterruptedException {
-        Thread.sleep(3000);
-        List<String> names;
-        names = driver.findElements(resultItems)
+    public List<String> getResultList() {
+        List<WebElement> elements = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(resultItems));
+        return elements
                 .stream()
-                .map(el -> el.getText()
-                        .toLowerCase())
+                .map(el -> el.getText().trim().toLowerCase())
                 .collect(Collectors.toList());
-        return names;
     }
 
-    public String selectRandomItem() throws Exception {
+    public String selectRandomItem() {
         companies = driver.findElements(By.xpath("//div[img[@alt='company-logo']]/div/div/div/div[string-length(text()) > 0]"));
-        Thread.sleep(5000);
         Random rand = new Random();
         randomCompanyIndex = rand.nextInt(companies.size());
         return getCompanyDetails(companies.get(randomCompanyIndex).getText());
     }
 
-    public SingleCompanyResult clickRandomPage() throws InterruptedException {
+    public SingleCompanyResult clickRandomPage() {
         Actions actions = new Actions(driver);
         actions.click(companies.get(randomCompanyIndex)).perform();
-        Thread.sleep(3000);
         return new SingleCompanyResult();
     }
 
@@ -67,34 +59,45 @@ public class SearchResultsPage extends BasePage {
 
     }
 
-    public SearchResultsPage openViewMoreSection() throws InterruptedException {
-        Thread.sleep(3000);
-        Actions actions = new Actions(driver);
-        actions.click(driver.findElement(viewMoreLocator)).perform();
-
+    public SearchResultsPage openViewMoreSection() {
+        wait.until(ExpectedConditions.elementToBeClickable(viewMoreLocator));
+        WebElement viewMore = driver.findElement(viewMoreLocator);
+        viewMore.click();
         return this;
     }
 
-    public SearchResultsPage selectIndustryFilter(String industryName) throws InterruptedException {
-        Actions actions = new Actions(driver);
-        Thread.sleep(5000);
-        actions.click(driver.findElement(By.xpath(String.format("//span[text()='%s']", industryName)))).perform();
-        Thread.sleep(5000);
-        return this;
-    }
-
-    public SearchResultsPage enterHiring() {
-        driver.findElement(hiringLocator).click();
-        return this;
-    }
-
-    public List<Company> getCompamyList() throws InterruptedException {
-        List<Company> productList = new ArrayList<>();
-        List<String> companies = getResultList();
-        Thread.sleep(5000);
-        for (String company : companies) {
-            productList.add(new Company(company));
+    public void selectIndustryFilter(String industryName) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[text()='Clear filters']")));
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(String.format("//span[text()='%s']", industryName))));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+        try {
+            element.click();
+        } catch (ElementClickInterceptedException e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
         }
-        return productList;
+    }
+
+    public void enterHiring() {
+        wait.until(ExpectedConditions.elementToBeClickable(hiringLocator));
+        driver.findElement(hiringLocator).click();
+    }
+
+    public List<Company> getCompamyList() {
+        WebElement sportFilterExpectedCount = driver.findElement(By.xpath("//span[text()='Sport']/span"));
+        WebElement sportFilterActualCount = driver.findElement(By.xpath("//img[@alt=\"building\"]//following-sibling::div"));
+        wait.until(dr -> {
+            int first = Integer.parseInt(sportFilterActualCount.getText().trim());
+            int second = Integer.parseInt(sportFilterExpectedCount.getText().trim().replaceAll("\\D", ""));
+            return first == second;
+        });
+        List<String> companyNames = getResultList();
+        return companyNames.stream().map(name -> new Company(name.toLowerCase())).collect(Collectors.toList());
+    }
+
+    public boolean isNoCompanyFoundMessageVisible() {
+        WebElement noResults = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div//img[@alt='search-not-found']/following-sibling::div")));
+        return noResults.isDisplayed();
     }
 }

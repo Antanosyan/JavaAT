@@ -2,6 +2,11 @@ package homework28_03;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class Header {
     private final WebDriver driver;
@@ -10,10 +15,9 @@ public class Header {
         this.driver = driver;
     }
 
-    public SearchResultsPage selectHeaderCategory(String category) {
-        driver.findElement(By.xpath(String.format("//div[@class='justify-content-end false  " +
-                        "web-dropdown light navbar-collapse collapse']//div[text()='%s']", category)))
-                .click();
-        return new SearchResultsPage();
+    public void selectHeaderCategory(String category) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement waiting = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format("//a/div[text()='%s']", category))));
+        waiting.click();
     }
 }
