@@ -8,7 +8,7 @@ import java.util.List;
 public class TestCompanyListValidation extends BaseTest {
 
     @Test
-    public void testCompany() throws InterruptedException {
+    public void testCompany() {
         //step1-2
         SearchResultsPage searchResultsPage = new SearchResultsPage();
         searchResultsPage.header.selectHeaderCategory("Companies");

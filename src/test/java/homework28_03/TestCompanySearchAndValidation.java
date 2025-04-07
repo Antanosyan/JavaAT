@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class TestCompanySearchAndValidation extends BaseTest {
 
     @Test
-    public void testCompanySearchAndValidation() throws Exception {
+    public void testCompanySearchAndValidation() {
         HomePage homePage = new HomePage();
         SearchResultsPage searchResultsPage;
 
