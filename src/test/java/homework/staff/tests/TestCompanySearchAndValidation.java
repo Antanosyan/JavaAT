@@ -1,26 +1,32 @@
-package homework28_03;
+package homework.staff.tests;
 
+import BaseTest.BaseTest;
+import homework.staff.pages.HomePage;
+import homework.staff.pages.SearchResultsPage;
+import homework.staff.pages.SingleCompanyResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
 public class TestCompanySearchAndValidation extends BaseTest {
-
+    @Override
+    protected String getUrl() {
+        return "https://staff.am";
+    }
     @Test
-    public void testCompanySearchAndValidation() throws Exception {
+    public void testCompanySearchAndValidation() {
         HomePage homePage = new HomePage();
-        SearchResultsPage searchResultsPage = new SearchResultsPage();
-        SingleCompanyResult singleCompanyResult = new SingleCompanyResult();
+        SearchResultsPage searchResultsPage;
 
-        homePage.selectCompaniesRadioButton("Companies")
+        searchResultsPage = homePage.selectCompaniesRadioButton("Companies")
                 .selectIndustry("Information technologies")
                 .clickSearchButton();
 
         searchResultsPage.enterSearchKeyword(RandomStringUtils.randomAlphanumeric(8))
                 .clickOnSearchButton();
-        Assertions.assertTrue(searchResultsPage.getResultList().isEmpty(),
-                "Result must be empty");
+        boolean noResults = searchResultsPage.isNoCompanyFoundMessageVisible();
+        Assertions.assertTrue(noResults, "Expected no companies to be found!");
 
         searchResultsPage.clearSearchField()
                 .enterSearchKeyword("ser")
@@ -30,7 +36,6 @@ public class TestCompanySearchAndValidation extends BaseTest {
                         .stream()
                         .allMatch(name -> name.contains("ser")),
                 "all products name must contain search keyword");
-
         String expectedDetails = searchResultsPage.selectRandomItem();
         SingleCompanyResult companyPage = searchResultsPage.clickRandomPage();
         String actualDetails = companyPage.getActualResult();
@@ -43,4 +48,6 @@ public class TestCompanySearchAndValidation extends BaseTest {
                 "Industry name of company should be the same as selected industries category");
 
     }
+
+
 }
