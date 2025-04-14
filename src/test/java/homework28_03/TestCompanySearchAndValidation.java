@@ -8,19 +8,18 @@ import org.junit.jupiter.api.Test;
 public class TestCompanySearchAndValidation extends BaseTest {
 
     @Test
-    public void testCompanySearchAndValidation() throws Exception {
+    public void testCompanySearchAndValidation() {
         HomePage homePage = new HomePage();
-        SearchResultsPage searchResultsPage = new SearchResultsPage();
-        SingleCompanyResult singleCompanyResult = new SingleCompanyResult();
+        SearchResultsPage searchResultsPage;
 
-        homePage.selectCompaniesRadioButton("Companies")
+        searchResultsPage = homePage.selectCompaniesRadioButton("Companies")
                 .selectIndustry("Information technologies")
                 .clickSearchButton();
 
         searchResultsPage.enterSearchKeyword(RandomStringUtils.randomAlphanumeric(8))
                 .clickOnSearchButton();
-        Assertions.assertTrue(searchResultsPage.getResultList().isEmpty(),
-                "Result must be empty");
+        boolean noResults = searchResultsPage.isNoCompanyFoundMessageVisible();
+        Assertions.assertTrue(noResults, "Expected no companies to be found!");
 
         searchResultsPage.clearSearchField()
                 .enterSearchKeyword("ser")
@@ -30,7 +29,6 @@ public class TestCompanySearchAndValidation extends BaseTest {
                         .stream()
                         .allMatch(name -> name.contains("ser")),
                 "all products name must contain search keyword");
-
         String expectedDetails = searchResultsPage.selectRandomItem();
         SingleCompanyResult companyPage = searchResultsPage.clickRandomPage();
         String actualDetails = companyPage.getActualResult();

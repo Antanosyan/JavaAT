@@ -3,14 +3,15 @@ package homework28_03;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-public class BaseTest {
+public abstract class BaseTest {
+
     @BeforeEach
     public void setUp() {
-        DriverGenerator.getDriver();
+        DriverGenerator.initializeBrowser("https://staff.am");
     }
 
     @AfterEach
-    public void tearDown() throws InterruptedException {
+    public void tearDown() {
         DriverGenerator.quitDriver();
     }
 }
