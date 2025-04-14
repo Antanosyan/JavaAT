@@ -29,7 +29,6 @@ public class TestCompanySearchAndValidation extends BaseTest {
                         .stream()
                         .allMatch(name -> name.contains("ser")),
                 "all products name must contain search keyword");
-
         String expectedDetails = searchResultsPage.selectRandomItem();
         SingleCompanyResult companyPage = searchResultsPage.clickRandomPage();
         String actualDetails = companyPage.getActualResult();

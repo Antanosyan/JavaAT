@@ -3,7 +3,8 @@ package homework28_03;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-public class BaseTest {
+public abstract class BaseTest {
+
     @BeforeEach
     public void setUp() {
         DriverGenerator.initializeBrowser("https://staff.am");

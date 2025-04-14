@@ -10,8 +10,8 @@ public class HomePage extends BasePage {
     private final By searchButton = By.xpath("//img[@alt='search-icon']");
 
     public HomePage selectCompaniesRadioButton(String radioButton) {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format("(//div[text()='%s'])[2]", radioButton))))
-                .click();
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath(String.format("(//div[text()='%s'])[2]", radioButton)))).click();
         return this;
     }
 

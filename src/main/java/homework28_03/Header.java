@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class Header {
+    private final String categoryXpath = "//a/div[text()='%s']";
     private final WebDriver driver;
 
     public Header(WebDriver driver) {
@@ -17,7 +18,7 @@ public class Header {
 
     public void selectHeaderCategory(String category) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement waiting = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format("//a/div[text()='%s']", category))));
+        WebElement waiting = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(categoryXpath, category))));
         waiting.click();
     }
 }
