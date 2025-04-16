@@ -17,7 +17,6 @@ public class DriverGenerator {
         }
         return driver.get();
     }
-
     private static WebDriver createDriver() {
         String browser = System.getProperty("browser", "chrome");
 
