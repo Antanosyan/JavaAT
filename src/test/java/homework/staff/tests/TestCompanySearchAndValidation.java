@@ -1,8 +1,9 @@
 package homework.staff.tests;
 
 import BaseTest.BaseTest;
+import homework.staff.pages.DriverGenerator;
 import homework.staff.pages.HomePage;
-import homework.staff.pages.SearchResultsPage;
+import homework.staff.pages.ResultPage;
 import homework.staff.pages.SingleCompanyResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -10,14 +11,11 @@ import org.junit.jupiter.api.Test;
 
 
 public class TestCompanySearchAndValidation extends BaseTest {
-    @Override
-    protected String getUrl() {
-        return "https://staff.am";
-    }
     @Test
     public void testCompanySearchAndValidation() {
+        DriverGenerator.getDriver().get("https://staff.am/");
         HomePage homePage = new HomePage();
-        SearchResultsPage searchResultsPage;
+        ResultPage searchResultsPage;
 
         searchResultsPage = homePage.selectCompaniesRadioButton("Companies")
                 .selectIndustry("Information technologies")

@@ -1,9 +1,7 @@
 package homework.staff.pages;
 
 import Base.BasePage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,10 +10,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class SearchResultsPage extends BasePage {
+public class ResultPage extends BasePage {
 
     private final String companyDetails = "//div[contains(text(),'%s')]/ancestor-or-self::div[4]";
     private final String industryNameXpath = "//span[text()='%s']";
+    private final String filterNameXpath = "//span[text()='%s']";
+    private final String filterTypeXpath = "//div[text()='%s']";
+    private final By jobsLoc = By.xpath("//div[h1]/following-sibling::div//img[@alt='left-icon']");
     private final By resultItemsLoc = By.xpath("//div[img[@alt='company-logo']]/div/div/div/div[string-length(text()) > 0]");
     public static int randomCompanyIndex;
     public static List<WebElement> companies;
@@ -32,8 +33,17 @@ public class SearchResultsPage extends BasePage {
     private WebElement hiringLocator;
     @FindBy(xpath = "//div//img[@alt='search-not-found']/following-sibling::div")
     private WebElement noCompanyMessageLoc;
+    @FindBy(xpath = "//div[text()='Filter By Industry']//following-sibling::div[6]")
+    private WebElement viewMore;
+    @FindBy(xpath = "//ul[@class='pagination']//li/a")
+    private WebElement pagination;
+    @FindBy(xpath = "//li[@class='next']/preceding-sibling::li[1]/a")
+    private WebElement lastPage;
+    @FindBy(xpath = "(//div[.//a[text()=\"1\"]])[8]/div[1]")
+    private WebElement firstCompany;
 
-    public SearchResultsPage enterSearchKeyword(String searchString) {
+
+    public ResultPage enterSearchKeyword(String searchString) {
         wait.until(ExpectedConditions.elementToBeClickable(searchInput)).sendKeys(searchString);
         return this;
     }
@@ -42,7 +52,7 @@ public class SearchResultsPage extends BasePage {
         submitSearchButton.click();
     }
 
-    public SearchResultsPage clearSearchField() {
+    public ResultPage clearSearchField() {
         searchInput.clear();
         return this;
     }
@@ -70,11 +80,10 @@ public class SearchResultsPage extends BasePage {
 
     public String getCompanyDetails(String nameCompany) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath(String.format(companyDetails, nameCompany))))
-                .getText().toLowerCase();
+                By.xpath(String.format(companyDetails, nameCompany)))).getText().toLowerCase();
     }
 
-    public SearchResultsPage openViewMoreSection() {
+    public ResultPage openViewMoreSection() {
         WebElement viewMore = wait.until(ExpectedConditions.elementToBeClickable(viewMoreLocator));
         viewMore.click();
         return this;
@@ -113,4 +122,73 @@ public class SearchResultsPage extends BasePage {
         WebElement noResults = wait.until(ExpectedConditions.visibilityOf(noCompanyMessageLoc));
         return noResults.isDisplayed();
     }
+
+    public int getItemsCountOfOnePage() {
+        return driver.findElements(jobsLoc).size();
+    }
+
+    public void clearFilter() {
+        actions.moveToElement(clearFilter).perform();
+        actions.click(clearFilter).perform();
+    }
+
+    public int getCountOfSelectedFilter(String filterType, String filterName) {
+        return Integer.parseInt(wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format("//div[text()= '%s']", filterType) + String.format("//following-sibling::div//span[text()=\"%s\"]/span", filterName)))).getText().replaceAll("\\D", ""));
+    }
+
+    public void clickViewMore(String filterType) {
+        WebElement filterSection = driver.findElement(By.xpath("//div[text()='" + filterType + "']"));
+
+        List<WebElement> list = filterSection.findElements(By.xpath("./following-sibling::div//div[text()='View more']"));
+        if (!list.isEmpty()) {
+            WebElement viewMore = list.getFirst();
+            actions.moveToElement(viewMore).perform();
+            actions.click(viewMore).perform();
+        }
+    }
+
+    public void selectFilter(String filterType, String filterName) {
+        String previousUrl = driver.getCurrentUrl();
+        clickViewMore(filterType);
+        String nameXpath = String.format(filterTypeXpath, filterType) + "//following-sibling::div" + String.format(filterNameXpath, filterName);
+        WebElement filterElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(nameXpath)));
+        actions.moveToElement(filterElement).perform();
+        actions.click(filterElement).perform();
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(previousUrl)));
+    }
+
+
+    public int getCompaniesCount() {
+        try {
+            int lastPageNumber = Integer.parseInt(wait.until(ExpectedConditions.elementToBeClickable(lastPage)).getText());
+            WebElement jobsOfFirstPage = driver.findElement(jobsLoc);
+            actions.moveToElement(lastPage).perform();
+            actions.click(lastPage).perform();
+            wait.until(ExpectedConditions.invisibilityOf(jobsOfFirstPage));
+            int jobsCountOFLastPage = getItemsCountOfOnePage();
+            return (lastPageNumber - 1) * 50 + jobsCountOFLastPage;
+        } catch (TimeoutException e) {
+            return getItemsCountOfOnePage();
+        }
+    }
+
+    public String getRandomItem(String filterType) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='" + filterType + "']")));
+            clickViewMore(filterType);
+            String xpath = String.format("//div[text()='%s']//following-sibling::div//span[span]", filterType);
+            List<WebElement> list = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(xpath)));
+            List<String> cleaned = list.stream().map(el -> el.getText().replaceAll(" \\(\\d+\\)", "")).toList();
+
+            if (!cleaned.isEmpty()) {
+                Random rand = new Random();
+                return cleaned.get(rand.nextInt(cleaned.size()));
+            }
+        } catch (NoSuchElementException e) {
+            return e.getMessage();
+        }
+        return null;
+    }
 }
+
+

@@ -1,20 +1,19 @@
 package homework.staff.tests;
 
 import BaseTest.BaseTest;
-import homework.staff.pages.SearchResultsPage;
+import homework.staff.pages.DriverGenerator;
+import homework.staff.pages.ResultPage;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class TestCompanyListValidation extends BaseTest {
-    @Override
-    protected String getUrl() {
-        return "https://staff.am";
-    }
     @Test
     public void testCompany() {
-        SearchResultsPage searchResultsPage = new SearchResultsPage();
+        DriverGenerator.getDriver().get("https://staff.am/");
+        ResultPage searchResultsPage = new ResultPage();
         searchResultsPage.header.selectHeaderCategory("Companies");
         searchResultsPage.openViewMoreSection()
                 .selectIndustryFilter("Sport");

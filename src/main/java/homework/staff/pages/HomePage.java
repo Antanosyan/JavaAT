@@ -22,9 +22,9 @@ public class HomePage extends BasePage {
         return this;
     }
 
-    public SearchResultsPage clickSearchButton() {
+    public ResultPage clickSearchButton() {
         driver.findElement(searchButton).click();
-        return new SearchResultsPage();
+        return new ResultPage();
     }
 
     public String getExpectedIndustryName() {

@@ -5,11 +5,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class BaseTest {
-    protected abstract String getUrl();
-
     @BeforeEach
     public void setUp() {
-        DriverGenerator.initializeBrowser(getUrl());
+        DriverGenerator.getDriver();
     }
 
     @AfterEach

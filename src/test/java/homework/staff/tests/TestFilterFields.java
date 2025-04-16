@@ -1,62 +1,65 @@
 package homework.staff.tests;
 
-;
 import BaseTest.BaseTest;
-import homework.staff.pages.JobsPage;
+import homework.staff.pages.DriverGenerator;
+import homework.staff.pages.ResultPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
-public class TestFilterFields extends BaseTest {
-    @Override
-    protected String getUrl() {
-        return "https://staff.am/jobs/";
-    }
+public class TestFilterFields extends FilterTest {
 
     @ParameterizedTest
     @CsvSource({
-            "Job category, Legal, Human Resources",
-            "Job special tag, Application without a CV, Doctoral degree",
-            "Specialist level, Junior, Mid level",
-            "Job salary, Not Mentioned, Mentioned",
-            "Job types, Fixed term contract, Full time",
-            "Job terms, Freelance, Permanent ",
-            "By cities, Goris, Yerevan"
+            "By cities",
+            "Job category",
+            "Job special tag",
+            "Specialist level",
+            "Job salary",
+            "Job types",
+            "Job terms",
     })
-    public void filtersValidation(String filterType, String filterName1, String filterName2) {
-        JobsPage jobsPage = new JobsPage();
+    public void filtersValidation(String filterType) {
+        DriverGenerator.getDriver().get("https://staff.am/jobs");
+        ResultPage jobsPage = new ResultPage();
 
+        String filterName1 = jobsPage.getRandomItem(filterType);
+        String filterName2 = jobsPage.getRandomItem(filterType);
+
+        while (filterName1 != null && filterName1.equals(filterName2)) {
+            filterName2 = jobsPage.getRandomItem(filterType);
+        }
+        // First filter
         jobsPage.selectFilter(filterType, filterName1);
-        int exceptedCountAfterFirstFilter = jobsPage.getCountOfSelectedFilter(filterType, filterName1);
-        int actualCountAfterFirstFilter = jobsPage.getCompaniesCount();
-        System.out.println("All jobs expected count -> " + exceptedCountAfterFirstFilter);
-        System.out.println("All jobs count after first filtering -> " + actualCountAfterFirstFilter);
+        int expectedFirst = jobsPage.getCountOfSelectedFilter(filterType, filterName1);
+        int actualFirst = jobsPage.getCompaniesCount();
+        Assertions.assertEquals(expectedFirst, actualFirst,
+                "Jobs count after applying first filter should match filter count");
+        System.out.println("All jobs expected count -> " + expectedFirst);
+        System.out.println("All jobs count after first filtering -> " + actualFirst);
         System.out.println("_________________________________________________________");
-        Assertions.assertEquals(exceptedCountAfterFirstFilter, actualCountAfterFirstFilter
-                , "Jobs count in filter section should be equals to count of jobs after first filtering");
-
+        // Second filter
         jobsPage.selectFilter(filterType, filterName2);
-        int exceptedCountAfterSecondFilter = jobsPage.getCountOfSelectedFilter(filterType, filterName1)
+        int expectedSecond = jobsPage.getCountOfSelectedFilter(filterType, filterName1)
                 + jobsPage.getCountOfSelectedFilter(filterType, filterName2);
-        int actualCountAfterSecondFilter = jobsPage.getCompaniesCount();
-        System.out.println("All jobs expected count -> " + exceptedCountAfterSecondFilter);
-        System.out.println("All jobs count after second filtering -> " + actualCountAfterSecondFilter);
+        int actualSecond = jobsPage.getCompaniesCount();
+        Assertions.assertEquals(expectedSecond, actualSecond,
+                "Jobs count after applying both filters should match combined filter count");
+        System.out.println("All jobs expected count -> " + expectedSecond);
+        System.out.println("All jobs count after second filtering -> " + actualSecond);
         System.out.println("_________________________________________________________");
-        Assertions.assertEquals(exceptedCountAfterSecondFilter, actualCountAfterSecondFilter
-                , "Jobs count sum in filter section should be equals to count of jobs after both filtering");
-
-        jobsPage.removeFilter(filterType, filterName1);
-        int exceptedCountAfterRemoveFirstFilter = jobsPage.getCountOfSelectedFilter(filterType, filterName2);
-        int actualCountAfterRemoveFirstFilter = jobsPage.getCompaniesCount();
-        System.out.println("All jobs expected count -> " + exceptedCountAfterRemoveFirstFilter);
-        System.out.println("All jobs count after first filter removing -> " + actualCountAfterRemoveFirstFilter);
+        // Remove first filter
+        jobsPage.selectFilter(filterType, filterName1);
+        int expectedAfterRemove = jobsPage.getCountOfSelectedFilter(filterType, filterName2);
+        int actualAfterRemove = jobsPage.getCompaniesCount();
+        Assertions.assertEquals(expectedAfterRemove, actualAfterRemove,
+                "Jobs count after removing first filter should match remaining filter count");
+        System.out.println("All jobs expected count -> " + expectedAfterRemove);
+        System.out.println("All jobs count after first filter removing -> " + actualAfterRemove);
         System.out.println("_________________________________________________________");
-        Assertions.assertEquals(exceptedCountAfterRemoveFirstFilter, actualCountAfterRemoveFirstFilter
-                , "Jobs count in filter section should be equals to count of jobs after unselected first");
-
-        jobsPage.setClearFilter();
-        System.out.println("All jobs count after removing filters -> " + jobsPage.getCompaniesCount());
-        System.out.println("_________________________________________________________");
+        jobsPage.clearFilter();
+        System.out.println("All filters cleared. Final count: " + jobsPage.getCompaniesCount());
     }
 }
+
