@@ -1,6 +1,4 @@
 package homework.staff.tests;
-
-import BaseTest.BaseTest;
 import homework.staff.pages.DriverGenerator;
 import homework.staff.pages.ResultPage;
 import org.junit.jupiter.api.Assertions;

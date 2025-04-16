@@ -1,5 +1,6 @@
 package homework28_03;
 
+import BaseTest.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
