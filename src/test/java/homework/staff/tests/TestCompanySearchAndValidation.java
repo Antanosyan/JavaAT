@@ -13,9 +13,14 @@ import org.junit.jupiter.api.Test;
 public class TestCompanySearchAndValidation extends BaseTest {
     @Test
     public void testCompanySearchAndValidation() {
+<<<<<<< HEAD:src/test/java/homework/staff/tests/TestCompanySearchAndValidation.java
         DriverGenerator.getDriver().get("https://staff.am/");
         HomePage homePage = new HomePage();
         ResultPage searchResultsPage;
+=======
+        HomePage homePage = new HomePage();
+        SearchResultsPage searchResultsPage;
+>>>>>>> main:src/test/java/homework28_03/TestCompanySearchAndValidation.java
 
         searchResultsPage = homePage.selectCompaniesRadioButton("Companies")
                 .selectIndustry("Information technologies")
