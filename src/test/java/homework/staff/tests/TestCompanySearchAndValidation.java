@@ -1,16 +1,26 @@
-package homework28_03;
+package homework.staff.tests;
 
+import BaseTest.BaseTest;
+import homework.staff.pages.DriverGenerator;
+import homework.staff.pages.HomePage;
+import homework.staff.pages.ResultPage;
+import homework.staff.pages.SingleCompanyResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
 public class TestCompanySearchAndValidation extends BaseTest {
-
     @Test
     public void testCompanySearchAndValidation() {
+<<<<<<< HEAD:src/test/java/homework/staff/tests/TestCompanySearchAndValidation.java
+        DriverGenerator.getDriver().get("https://staff.am/");
+        HomePage homePage = new HomePage();
+        ResultPage searchResultsPage;
+=======
         HomePage homePage = new HomePage();
         SearchResultsPage searchResultsPage;
+>>>>>>> main:src/test/java/homework28_03/TestCompanySearchAndValidation.java
 
         searchResultsPage = homePage.selectCompaniesRadioButton("Companies")
                 .selectIndustry("Information technologies")
@@ -41,4 +51,6 @@ public class TestCompanySearchAndValidation extends BaseTest {
                 "Industry name of company should be the same as selected industries category");
 
     }
+
+
 }
