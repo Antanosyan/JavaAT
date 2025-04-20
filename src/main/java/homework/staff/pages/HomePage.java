@@ -1,33 +1,42 @@
 package homework.staff.pages;
 
-import Base.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage extends BasePage {
 
-    private final By infTechnologies = By.xpath("//div[text()='Information technologies']");
-    private final By categorySearchField = By.xpath("//input[@class='ant-select-selection-search-input']");
-    private final By searchButton = By.xpath("//img[@alt='search-icon']");
+    private final String radioButtonXpath = "(//div//div[contains(text() , '%s')])[2]";
+    private final String industryCategoryXpath = "//div[text()='%s']";
+    @FindBy(xpath = "//input[@class='ant-select-selection-search-input']")
+    WebElement allIndustriesDropDown;
+    @FindBy(xpath = "//img[@alt='search-icon']")
+    WebElement searchButton;
+    @FindBy(xpath = "//div[text()='Information technologies']")
+    WebElement informationTechnologiesOption;
 
-    public HomePage selectCompaniesRadioButton(String radioButton) {
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath(String.format("(//div[text()='%s'])[2]", radioButton)))).click();
+    public HomePage selectRadioButtonOnTab(String radioButton) {
+        wait.until(ExpectedConditions
+                        .elementToBeClickable(By.xpath(String.format(radioButtonXpath, radioButton))))
+                .click();
         return this;
     }
 
-    public HomePage selectIndustry(String industry) {
-        driver.findElement(categorySearchField).sendKeys(industry);
-        driver.findElement(By.xpath(String.format("//div[text()='%s']", industry))).click();
+    public HomePage selectIndustryCategory(String industry) {
+        wait.until(ExpectedConditions.visibilityOf(allIndustriesDropDown)).sendKeys(industry);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(industryCategoryXpath, industry))))
+                .click();
         return this;
     }
 
-    public ResultPage clickSearchButton() {
-        driver.findElement(searchButton).click();
-        return new ResultPage();
+    public SearchResultPage enterSearchButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(searchButton))
+                .click();
+        return new SearchResultPage();
     }
 
-    public String getExpectedIndustryName() {
-        return driver.findElement(infTechnologies).getText().toLowerCase();
+    public String getIndustryDetail() {
+        return wait.until(ExpectedConditions.elementToBeClickable(informationTechnologiesOption)).getText();
     }
 }

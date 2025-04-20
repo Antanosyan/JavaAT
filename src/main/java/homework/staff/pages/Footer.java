@@ -20,7 +20,7 @@ public class Footer {
         this.driver = driver;
     }
 
-    public ResultPage selectFooterCategory() {
+    public SearchResultPage selectFooterCategory() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         Actions actions = new Actions(driver);
         wait.until(ExpectedConditions.visibilityOf(viewAll));
@@ -29,6 +29,6 @@ public class Footer {
                 .click(viewAll)
                 .build()
                 .perform();
-        return new ResultPage();
+        return new SearchResultPage();
     }
 }

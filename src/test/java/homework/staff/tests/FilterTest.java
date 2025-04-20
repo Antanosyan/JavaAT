@@ -1,14 +1,12 @@
 package homework.staff.tests;
 
-import BaseTest.BaseTest;
-import homework.staff.pages.ResultPage;
+import homework.staff.pages.SearchResultPage;
 import org.junit.jupiter.api.AfterEach;
 
-public class FilterTest extends BaseTest {
-    ResultPage resultPage = new ResultPage();
-
+public class FilterTest extends BaseTest{
+    SearchResultPage jobsPage = new SearchResultPage();
     @AfterEach
-    public void clearFields() {
-        resultPage.clearFilter();
+    public void clearFiltersAfterTest() {
+        jobsPage.setClearFilter();
     }
 }
