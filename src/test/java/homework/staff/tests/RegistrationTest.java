@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.RegistrationTestSteps;
 
-public class RegistrationTest {
+public class RegistrationTest extends BaseTest{
     RegistrationTestSteps steps = new RegistrationTestSteps();
 
     @Test

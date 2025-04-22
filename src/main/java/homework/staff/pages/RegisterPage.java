@@ -38,7 +38,7 @@ public class RegisterPage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(lastname)).sendKeys(lastName);
     }
 
-    public void setPassword() {
+    public void getProperty(WebElement element) {
         Properties prop = new Properties();
         try {
             FileInputStream fis = new FileInputStream("src/test/resources/data.properties");
@@ -46,18 +46,15 @@ public class RegisterPage extends BasePage {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        wait.until(ExpectedConditions.elementToBeClickable(password)).sendKeys(prop.getProperty("password"));
+        wait.until(ExpectedConditions.elementToBeClickable(element)).sendKeys(prop.getProperty("password"));
+    }
+
+    public void setPassword() {
+        getProperty(password);
     }
 
     public void confirmPassword() {
-        Properties prop = new Properties();
-        try {
-            FileInputStream fis = new FileInputStream("src/test/resources/data.properties");
-            prop.load(fis);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        wait.until(ExpectedConditions.elementToBeClickable(confirmPassword)).sendKeys(prop.getProperty("password"));
+        getProperty(confirmPassword);
     }
 
     public void agreeToTerms() {
