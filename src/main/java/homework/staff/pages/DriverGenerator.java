@@ -17,10 +17,11 @@ public class DriverGenerator {
         }
         return driver.get();
     }
+
     private static WebDriver createDriver() {
         String browser = System.getProperty("browser", "chrome");
 
-        WebDriver driver =  switch (browser.toLowerCase()) {
+        WebDriver driver = switch (browser.toLowerCase()) {
             case "firefox" -> new FirefoxDriver();
             case "edge" -> new EdgeDriver();
             default -> new ChromeDriver();

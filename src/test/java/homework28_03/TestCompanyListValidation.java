@@ -1,6 +1,8 @@
 package homework28_03;
 
-import BaseTest.BaseTest;
+import homework.staff.pages.DriverGenerator;
+import homework.staff.pages.SearchResultPage;
+import homework.staff.tests.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,18 +12,20 @@ public class TestCompanyListValidation extends BaseTest {
 
     @Test
     public void testCompany() {
-        SearchResultsPage searchResultsPage = new SearchResultsPage();
+        DriverGenerator.getDriver().get("https://staff.am/");
+
+        SearchResultPage searchResultsPage = new SearchResultPage();
         searchResultsPage.header.selectHeaderCategory("Companies");
         searchResultsPage.openViewMoreSection()
-                .selectIndustryFilter("Sport");
-        List<String> companyListAfterHeaderFiltering = searchResultsPage.getCompanyList();
+                .selectFilterIndustry("Sport");
+        List<String> companyListAfterHeaderFiltering = searchResultsPage.getCompaniesList();
         searchResultsPage.enterHiring();
-        List<String> companyListAfterHiringFilter = searchResultsPage.getCompanyList();
+        List<String> companyListAfterHiringFilter = searchResultsPage.getCompaniesList();
         searchResultsPage.footer.selectFooterCategory()
-                .selectIndustryFilter("Sport");
-        List<String> companyListAfterFooterFiltering = searchResultsPage.getCompanyList();
+                .selectFilterIndustry("Sport");
+        List<String> companyListAfterFooterFiltering = searchResultsPage.getCompaniesList();
         searchResultsPage.enterHiring();
-        List<String> companyListAfterHiringFilter2 = searchResultsPage.getCompanyList();
+        List<String> companyListAfterHiringFilter2 = searchResultsPage.getCompaniesList();
         Assertions.assertEquals(companyListAfterHeaderFiltering, companyListAfterFooterFiltering,
                 "all the objects details must be the same");
         Assertions.assertEquals(companyListAfterHiringFilter, companyListAfterHiringFilter2,
