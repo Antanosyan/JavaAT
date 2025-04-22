@@ -76,5 +76,4 @@ public class RegistrationTestSteps {
     public String getActualRegisterButtonStyle() {
         return registerPage.getRegisterButtonStyle();
     }
-
 }

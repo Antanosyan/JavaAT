@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.RegistrationTestSteps;
 
-public class RegistrationTest extends BaseTest{
+public class RegistrationTest extends BaseTest {
     RegistrationTestSteps steps = new RegistrationTestSteps();
 
     @Test
@@ -13,9 +13,9 @@ public class RegistrationTest extends BaseTest{
     void testRegistration() {
         steps.openMainPage();
         steps.selectCandidate();
-        steps.fillBirthday("1987", "July", "13");
         steps.setFirstName("Vahe");
         steps.setLastName("Antanosyan");
+        steps.fillBirthday("1987", "July", "13");
         Assertions.assertTrue(steps.enterEmailAndCheckInvalidMessage("d#4fj", "The field must be a valid email address.")
                 , "Expected invalid email error message when attempt to enter password but it was not displayed.");
         Assertions.assertTrue(steps.enterValidEmailAndVerifyNoError("antanosyan1987@gmail.com")
