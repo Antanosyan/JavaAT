@@ -1,9 +1,7 @@
 package components.dropdown;
 
-import homework.staff.pages.DriverGenerator;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -63,8 +61,6 @@ public class DropdownComponent {
             throw new RuntimeException(
                     String.format("Option '%s' not found in dropdown '%s' after %d attempts.", optionText, dropdownName, maxAttempts)
             );
-
         }
     }
 }
-

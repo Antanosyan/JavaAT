@@ -21,10 +21,9 @@ abstract class BasePage {
         this.driver = DriverGenerator.getDriver();
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         this.js = (JavascriptExecutor) driver;
-        this.header = new Header();
+        this.header = new Header(driver);
         this.footer = new Footer(driver);
         this.actions = new Actions(driver);
-
         PageFactory.initElements(driver, this);
     }
 }

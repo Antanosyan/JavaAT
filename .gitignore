@@ -1,8 +1,10 @@
 target/
 **/target/
+screenshots/
 !.mvn/wrapper/maven-wrapper.jar
 src/test/resources/data.properties
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml

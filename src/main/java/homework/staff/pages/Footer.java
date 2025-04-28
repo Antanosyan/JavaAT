@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class Footer {
+    WebDriverWait wait;
     private final WebDriver driver;
     @FindBy(xpath = "(//a//div[text()='View all companies'])[2]")
     private WebElement viewAll;
@@ -18,10 +19,10 @@ public class Footer {
     public Footer(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     public SearchResultPage selectFooterCategory() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         Actions actions = new Actions(driver);
         wait.until(ExpectedConditions.visibilityOf(viewAll));
         actions.scrollToElement(viewAll)

@@ -15,7 +15,7 @@ public class TestCompanyListValidation extends BaseTest {
         DriverGenerator.getDriver().get("https://staff.am/");
 
         SearchResultPage searchResultsPage = new SearchResultPage();
-        searchResultsPage.header.selectHeaderCategory("Companies");
+        searchResultsPage.header.selectCategoryOfHeader("Companies");
         searchResultsPage.openViewMoreSection()
                 .selectFilterIndustry("Sport");
         List<String> companyListAfterHeaderFiltering = searchResultsPage.getCompaniesList();

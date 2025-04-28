@@ -1,5 +1,6 @@
 package homework.staff.pages;
-
+import components.dropdown.DropdownComponent;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -7,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import utils.screenshot.AllureAttachments;
 
 public class RegisterPage extends BasePage {
 
@@ -25,32 +27,45 @@ public class RegisterPage extends BasePage {
     @FindBy(xpath = "//div[text()='The field must be a valid email address.']")
     private WebElement emailError;
     private final By agreeToTermLoc = RelativeLocator.with(By.tagName("div")).toLeftOf(By.xpath("//span[contains(text(), 'I agree')]"));
+    private final DropdownComponent dropdown = new DropdownComponent(driver, "//span[input[@type='search']]");
 
+    @Step("Select 'Candidate' from header")
+    public RegisterPage selectCandidate(String category,String categoryItem) {
+        header.hoverAndClick(category,categoryItem);
+        return this;
+    }
 
-    public void setFirstName(String firstName) {
+    @Step("Set firstname and lastname: {firstName}, {lastName}")
+    public RegisterPage setPersonalName(String firstName, String lastName) {
         wait.until(ExpectedConditions.elementToBeClickable(firstname)).sendKeys(firstName);
-    }
-
-    public void setLastName(String lastName) {
         wait.until(ExpectedConditions.elementToBeClickable(lastname)).sendKeys(lastName);
+        return this;
     }
 
-    private void setFromSystemProperty(WebElement element) {
-        String value = System.getProperty("password");
-        if (value == null) {
-            throw new IllegalArgumentException("System property '" + "password" + "' is not set. Pass it via -D" + "password" + "=yourValue");
+    @Step("Fill birthday dropdowns: Year: {year}, Month: {month}, Day: {day}")
+    public void fillBirthday(String year, String month, String day) {
+        dropdown.selectOption("Year", year);
+        dropdown.selectOption("Month", month);
+        dropdown.selectOption("Day", day);
+    }
+
+    private void setPasswordToField(WebElement passwordField) {
+        String password = System.getProperty("password");
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password must be provided via -Dpassword=yourPassword");
         }
-        wait.until(ExpectedConditions.elementToBeClickable(element)).sendKeys(value);
+        WebElement field = wait.until(ExpectedConditions.visibilityOf(passwordField));
+        field.clear();
+        field.sendKeys(password);
     }
 
-    public final void setPassword() {
-        setFromSystemProperty(passwordField);
+    @Step("Fill password fields")
+    public void setPassword() {
+        setPasswordToField(passwordField);
+        setPasswordToField(confirmPasswordField);
     }
 
-    public final void confirmPassword() {
-        setFromSystemProperty(confirmPasswordField);
-    }
-
+    @Step("Agree to Terms and Conditions")
     public void agreeToTerms() {
         WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(agreeToTermLoc));
         actions.moveToElement(checkbox).perform();
@@ -60,6 +75,7 @@ public class RegisterPage extends BasePage {
         }
     }
 
+    @Step("Submit registration")
     public void submitRegister() {
         actions.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(register))).click().perform();
     }
@@ -72,21 +88,25 @@ public class RegisterPage extends BasePage {
         emailField.sendKeys(Keys.TAB);
     }
 
+    @Step("Enter invalid email and verify error message is displayed'{expectedErrorText}'")
     public boolean enterEmailAndCheckInvalidMessage(String emailText, String expectedErrorText) {
         enterEmail(emailText);
+        AllureAttachments.attachScreenshot(driver,"Shows expected error");
         return wait.until(ExpectedConditions.textToBePresentInElement(emailError, expectedErrorText));
     }
 
+    @Step("Enter valid email and verify no error message is displayed")
     public boolean enterValidEmailAndVerifyNoError(String emailText) {
         enterEmail(emailText);
         try {
             return wait.until(ExpectedConditions.invisibilityOf(emailError))
-                    || wait.until(d -> emailError.getText().isBlank());
+                    || wait.until(a_ -> emailError.getText().isBlank());
         } catch (TimeoutException e) {
             return false;
         }
     }
 
+    @Step("Get style value for the Register button")
     public String getRegisterButtonStyle() {
         return wait.until(ExpectedConditions.visibilityOf(register)).getDomAttribute("style");
     }
