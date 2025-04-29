@@ -18,7 +18,6 @@ public class CompanyPage extends BasePage {
                 .replace("(", "").replace(")", "");
         return name + "\n" + details;
     }
-
     public String getIndustryDetail() {
         return industry.getText();
     }
