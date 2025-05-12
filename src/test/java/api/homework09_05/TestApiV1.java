@@ -1,5 +1,6 @@
 package api.homework09_05;
 
+import api.homework09_05.helper.Data;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
@@ -17,7 +18,6 @@ import static org.hamcrest.Matchers.*;
 public class TestApiV1 {
     private RequestSpecification requestSpec;
     private int deletedUserId;
-    private static final String TOKEN = "Bearer d17163e3268695238ea007fd57d8b00191c2bfa2e84a5f9be9b1662784c7f84c";
     private static final String BASE_URI = "https://gorest.co.in";
 
     @BeforeEach
@@ -86,7 +86,7 @@ public class TestApiV1 {
         RestAssured
                 .given()
                 .spec(requestSpec)
-                .header("Authorization", TOKEN)
+                .header("Authorization", Data.TOKEN)
                 .when()
                 .delete("/users/" + deletedUserId)
                 .then()
