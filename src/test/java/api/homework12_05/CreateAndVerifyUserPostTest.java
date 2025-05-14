@@ -1,8 +1,6 @@
 package api.homework12_05;
 
 import api.homework09_05.helper.Data;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -24,7 +22,7 @@ public class CreateAndVerifyUserPostTest {
     }
 
     @Test
-    public void getPosts() throws JsonProcessingException {
+    public void getPosts() {
         List<PostDto> posts = RestAssured
                 .given()
                 .spec(requestSpec)
