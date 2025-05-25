@@ -36,7 +36,7 @@ public class TestApi {
                 .get("/users")
                 .then()
                 .log().body()
-                .statusCode(404)//200
+                .statusCode(400)//200
                 .body("data.size()", Matchers.is(10));
     }
 
