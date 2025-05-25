@@ -26,6 +26,7 @@ public class TestApi {
     }
 
     @Test
+    @Tag("api")
     @Order(1)
     public void testGetUsersDefault() {
         RestAssured
