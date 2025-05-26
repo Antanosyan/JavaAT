@@ -26,6 +26,7 @@ public class TestApi {
     }
 
     @Test
+    @Tag("api")
     @Order(1)
     public void testGetUsersDefault() {
         RestAssured
@@ -35,7 +36,7 @@ public class TestApi {
                 .get("/users")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .statusCode(200)//200
                 .body("data.size()", Matchers.is(10));
     }
 
