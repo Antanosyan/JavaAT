@@ -18,7 +18,7 @@ public class CreateAndVerifyUserPostTest {
     @BeforeEach
     public void setup() {
         RestAssured.baseURI = BASE_URI;
-        requestSpec = new RequestSpecBuilder().setBasePath("/public/v2").build();
+        requestSpec = new RequestSpecBuilder().setBasePath("/publicii/v2").build();
     }
 
     @Test
