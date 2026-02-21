@@ -12,7 +12,7 @@ public class  BaseTest {
     protected final WebDriver driver = DriverGenerator.getDriver();
 
     @RegisterExtension
-    ScreenshotOnFailure screenshot = new ScreenshotOnFailure(driver);
+    ScreenshotOnFailure screenshot = new   ScreenshotOnFailure(driver);
 
     @BeforeEach
     public void setUp(){
