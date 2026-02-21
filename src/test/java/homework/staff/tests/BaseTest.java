@@ -9,8 +9,7 @@ import utils.screenshot.ScreenshotOnFailure;
 
 public class  BaseTest {
 
-    protected final WebDriver driver =
-            DriverGenerator.getDriver();
+    protected final WebDriver driver = DriverGenerator.getDriver();
 
     @RegisterExtension
     ScreenshotOnFailure screenshot = new ScreenshotOnFailure(driver);
