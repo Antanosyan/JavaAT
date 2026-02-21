@@ -14,6 +14,10 @@ public class  BaseTest {
     @RegisterExtension
     ScreenshotOnFailure screenshot = new   ScreenshotOnFailure(driver);
 
+    public ScreenshotOnFailure getScreenshot() {
+        return screenshot;
+    }
+
     @BeforeEach
     public void setUp(){
         DriverGenerator.getDriver();
