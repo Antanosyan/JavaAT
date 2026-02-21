@@ -25,7 +25,6 @@ public class CreateAndVerifyUserPostTest {
     public void getPosts() {
         List<PostDto> posts = RestAssured
                 .given()
-                .header("Authorization", Data.TOKEN)
                 .spec(requestSpec)
                 .when()
                 .get("/posts")
@@ -34,6 +33,7 @@ public class CreateAndVerifyUserPostTest {
                 .extract()
                 .jsonPath()
                 .getList(".", PostDto.class);
+
         int index = new Random().nextInt(posts.size());
         int randomUserId = posts.get(index).user_id();
 
