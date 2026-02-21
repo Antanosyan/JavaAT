@@ -23,8 +23,10 @@ public class  BaseTest {
         DriverGenerator.getDriver();
     }
 
+
     @AfterEach
     public void tearDown()  {
         DriverGenerator.quitDriver();
+        System.out.println("Driver closed successfully.");
     }
 }
