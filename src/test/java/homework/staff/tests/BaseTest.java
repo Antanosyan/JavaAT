@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.WebDriver;
 import utils.screenshot.ScreenshotOnFailure;
 
-public class BaseTest {
+public class  BaseTest {
 
     protected final WebDriver driver = DriverGenerator.getDriver();
 
