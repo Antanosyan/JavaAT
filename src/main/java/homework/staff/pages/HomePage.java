@@ -7,8 +7,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage extends BasePage {
 
-    private final String radioButtonXpath = "(//div//div[contains(text() , '%s')])[2]";
-    private final String industryCategoryXpath = "//div[text()='%s']";
     @FindBy(xpath = "//input[@class='ant-select-selection-search-input']")
     WebElement allIndustriesDropDown;
     @FindBy(xpath = "//img[@alt='search-icon']")
@@ -17,6 +15,7 @@ public class HomePage extends BasePage {
     WebElement informationTechnologiesOption;
 
     public HomePage selectRadioButtonOnTab(String radioButton) {
+        String radioButtonXpath = "(//div//div[contains(text() , '%s')])[2]";
         wait.until(ExpectedConditions
                         .elementToBeClickable(By.xpath(String.format(radioButtonXpath, radioButton))))
                 .click();
@@ -25,6 +24,7 @@ public class HomePage extends BasePage {
 
     public HomePage selectIndustryCategory(String industry) {
         wait.until(ExpectedConditions.visibilityOf(allIndustriesDropDown)).sendKeys(industry);
+        String industryCategoryXpath = "//div[text()='%s']";
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(industryCategoryXpath, industry))))
                 .click();
         return this;
