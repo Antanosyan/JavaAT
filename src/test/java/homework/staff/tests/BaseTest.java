@@ -7,20 +7,26 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.WebDriver;
 import utils.screenshot.ScreenshotOnFailure;
 
-public class BaseTest {
+public class  BaseTest {
 
     protected final WebDriver driver = DriverGenerator.getDriver();
 
     @RegisterExtension
-    ScreenshotOnFailure screenshot = new ScreenshotOnFailure(driver);
+    ScreenshotOnFailure screenshot = new   ScreenshotOnFailure(driver);
+
+    public ScreenshotOnFailure getScreenshot() {
+        return screenshot;
+    }
 
     @BeforeEach
     public void setUp(){
         DriverGenerator.getDriver();
     }
 
+
     @AfterEach
     public void tearDown()  {
         DriverGenerator.quitDriver();
+        System.out.println("Driver closed successfully.");
     }
 }
