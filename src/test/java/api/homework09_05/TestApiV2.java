@@ -8,17 +8,16 @@ import io.restassured.specification.RequestSpecification;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.Matchers.*;
-
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestApiV2 {
     private RequestSpecification requestSpec;
     private static int deletedUserId;
     private static final String BASE_URI = "https://gorest.co.in";
+
     @BeforeEach
     public void setup() {
         RestAssured.baseURI = BASE_URI;
@@ -80,7 +79,7 @@ public class TestApiV2 {
                 .get("/users");
 
         int userCount = response.jsonPath().getList("$").size();
-        int randomIndex = new Random().nextInt(userCount);
+        int randomIndex = ThreadLocalRandom.current().nextInt(userCount);
         deletedUserId = response.jsonPath().getInt("[" + randomIndex + "].id");
 
         RestAssured
