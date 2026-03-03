@@ -4,12 +4,14 @@ import homework.staff.pages.DriverGenerator;
 import homework.staff.pages.RegisterPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationTest extends BaseTest {
     private final RegisterPage registerPage = new RegisterPage();
 
     @Test
+    @Tag("ui")
     @DisplayName("Register with valid email after invalid input")
     void testRegistration() {
         DriverGenerator.getDriver().get("https://staff.am/");
